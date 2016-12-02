@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="200dp"
+    android:layout_height="300dp"
+    android:layout_marginBottom="20dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginTop="20dp"
+    android:orientation="vertical"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <ImageView
+            android:scaleType="fitXY"
+            android:id="@+id/home_new_image"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            />
+
+        <TextView
+            android:id="@+id/text_new"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/home_new_image"
+            android:layout_margin="10dp"
+            android:textColor="@android:color/black"/>
+
+        <TextView
+            android:id="@+id/text_new_t"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_new"
+            android:layout_marginLeft="10dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textSize="11sp"
+            />
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_new_t"
+            android:layout_margin="10dp"
+            android:src="@drawable/second_fav"/>
+
+        <ImageView
+            android:id="@+id/image1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_new_t"
+            android:layout_margin="10dp"
+            android:layout_toRightOf="@+id/image"
+            android:src="@drawable/second_view"/>
+
+        <TextView
+            android:id="@+id/new_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_new_t"
+            android:layout_margin="10dp"
+            android:layout_toRightOf="@+id/image1"
+            />
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

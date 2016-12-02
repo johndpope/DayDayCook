@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">DayDayCook</string>
+    <string name="splash">开启极味之旅</string>
+    <string name="home_ksrk_icon_sort">食品分类</string>
+    <string name="home_ksrk_icon_video">视频专区</string>
+    <string name="home_ksrk_icon_course">厨房挑战</string>
+    <string name="home_ksrk_icon_check_in">签到奖励</string>
+    <string name="home_new">每日新菜馆</string>
+    <string name="home_hot">当红人气菜</string>
+    <string name="home_topic">美食全攻略</string>
+    <string name="jingxuan">精选</string>
+    <string name="shipu">食谱</string>
+    <string name="faxian">发现</string>
+    <string name="me">我的</string>
+</resources>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+    <com.dayday.cook.widget.CustomVideoView
+        android:id="@+id/videoview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/start"
+        android:layout_width="wrap_content"
+        android:shadowDx="1"
+        android:shadowRadius="1"
+        android:shadowDy="1"
+        android:shadowColor="@android:color/darker_gray"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="15sp"
+        android:layout_marginBottom="36dp"
+        android:background="@drawable/btn_splash"
+        android:paddingRight="20dp"
+        android:paddingLeft="20dp"
+        android:textColor="@android:color/white"
+        android:text="@string/splash"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_height="30dp"/>
+</RelativeLayout>

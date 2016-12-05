@@ -4,4 +4,7 @@
     <color name="colorPrimaryDark">@android:color/white</color>
     <color name="colorAccent">@android:color/white</color>
     <color name="tabs">#fd5d31</color>
+    <color name="href">#6f000000</color>
+    <color name="commen">#f4f4f4</color>
+    <color name="pull_text">#654b3b</color>
 </resources>

@@ -2,10 +2,10 @@ package com.youth.banner;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -94,7 +94,7 @@ public class Banner extends FrameLayout implements OnPageChangeListener {
         mIndicatorMargin = typedArray.getDimensionPixelSize(R.styleable.Banner_indicator_margin, BannerConfig.PADDING_SIZE);
         mIndicatorSelectedResId = typedArray.getResourceId(R.styleable.Banner_indicator_drawable_selected, R.drawable.gray_radius);
         mIndicatorUnselectedResId = typedArray.getResourceId(R.styleable.Banner_indicator_drawable_unselected, R.drawable.white_radius);
-        scaleType=typedArray.getInt(R.styleable.Banner_image_scale_type,7);
+        scaleType=typedArray.getInt(R.styleable.Banner_image_scale_type,6);
         delayTime = typedArray.getInt(R.styleable.Banner_delay_time, BannerConfig.TIME);
         scrollTime = typedArray.getInt(R.styleable.Banner_scroll_time, BannerConfig.DURATION);
         isAutoPlay = typedArray.getBoolean(R.styleable.Banner_is_auto_play, BannerConfig.IS_AUTO_PLAY);
@@ -108,6 +108,8 @@ public class Banner extends FrameLayout implements OnPageChangeListener {
     private void initView(Context context, AttributeSet attrs) {
         imageViews.clear();
         View view = LayoutInflater.from(context).inflate(R.layout.banner, this, true);
+        DisplayMetrics dm = context.getResources().getDisplayMetrics();
+        view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,dm.heightPixels/3));
         viewPager = (BannerViewPager) view.findViewById(R.id.viewpager);
         titleView = (LinearLayout) view.findViewById(R.id.titleView);
         indicator = (LinearLayout) view.findViewById(R.id.indicator);
@@ -432,17 +434,14 @@ public class Banner extends FrameLayout implements OnPageChangeListener {
     }
 
     class BannerPagerAdapter extends PagerAdapter {
-
         @Override
         public int getCount() {
             return imageViews.size();
         }
-
         @Override
         public boolean isViewFromObject(View arg0, Object arg1) {
             return arg0 == arg1;
         }
-
         @Override
         public Object instantiateItem(ViewGroup container, final int position) {
             container.addView(imageViews.get(position));
@@ -457,15 +456,12 @@ public class Banner extends FrameLayout implements OnPageChangeListener {
             }
             return view;
         }
-
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
             if (imageViews.size()>position)
                 container.removeView(imageViews.get(position));
         }
-
     }
-
     @Override
     public void onPageScrollStateChanged(int state) {
         if (mOnPageChangeListener != null) {
@@ -491,14 +487,12 @@ public class Banner extends FrameLayout implements OnPageChangeListener {
                 break;
         }
     }
-
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         if (mOnPageChangeListener != null) {
             mOnPageChangeListener.onPageScrolled(position, positionOffset, positionOffsetPixels);
         }
     }
-
     @Override
     public void onPageSelected(int position) {
         if (mOnPageChangeListener != null) {
@@ -543,11 +537,9 @@ public class Banner extends FrameLayout implements OnPageChangeListener {
         }
 
     }
-
     public void setOnBannerClickListener(OnBannerClickListener listener) {
         this.listener=listener;
     }
-
     public void setOnPageChangeListener(OnPageChangeListener onPageChangeListener) {
         mOnPageChangeListener = onPageChangeListener;
     }

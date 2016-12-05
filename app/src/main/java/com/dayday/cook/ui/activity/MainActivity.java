@@ -1,6 +1,9 @@
 package com.dayday.cook.ui.activity;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.v4.app.FragmentTransaction;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.TextView;
 
@@ -38,6 +41,7 @@ import butterknife.BindView;
  */
 public class MainActivity extends BaseActivity {
     public static int statuBar = 0;
+    public static int Height = 0;
     @BindView(R.id.jingxuan)
     TextView mJingXuan;
     @BindView(R.id.shipu)
@@ -51,10 +55,20 @@ public class MainActivity extends BaseActivity {
     private FaXianFragment mFaXianFragment = null;
     private MeFragment mMeFragment = null;
     private int currentId = R.id.jingxuan;// 当前选中id,默认是主页
+
+    public int getScreenH(Context aty) {
+        DisplayMetrics dm = aty.getResources().getDisplayMetrics();
+        return dm.widthPixels;
+    }
     @Override
     protected void configViews() {
         statuBar = getStatusBarHeight();
+        Height = getScreenH(this);
         mJingXuan.setSelected(true);
+        Drawable drawable4= getResources().getDrawable(R.drawable.tab_btn_jingxuan_select);
+        /// 这一步必须要做,否则不会显示.
+        drawable4.setBounds(0, 0, drawable4.getMinimumWidth(), drawable4.getMinimumHeight());
+        mJingXuan.setCompoundDrawables(null,drawable4,null,null);
         /**
          * 默认加载首页
          */
@@ -143,18 +157,50 @@ public class MainActivity extends BaseActivity {
         mShiPu.setSelected(false);
         mFaXian.setSelected(false);
         mMe.setSelected(false);
+        Drawable drawable= getResources().getDrawable(R.drawable.tab_jingxuan);
+        /// 这一步必须要做,否则不会显示.
+        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+        mJingXuan.setCompoundDrawables(null,drawable,null,null);
+        Drawable drawable1= getResources().getDrawable(R.drawable.tab_shipu);
+        /// 这一步必须要做,否则不会显示.
+        drawable1.setBounds(0, 0, drawable1.getMinimumWidth(), drawable1.getMinimumHeight());
+        mShiPu.setCompoundDrawables(null,drawable1,null,null);
+        Drawable drawable2= getResources().getDrawable(R.drawable.tab_faxian);
+        /// 这一步必须要做,否则不会显示.
+        drawable2.setBounds(0, 0, drawable2.getMinimumWidth(), drawable2.getMinimumHeight());
+        mFaXian.setCompoundDrawables(null,drawable2,null,null);
+        Drawable drawable3= getResources().getDrawable(R.drawable.tab_me);
+        /// 这一步必须要做,否则不会显示.
+        drawable3.setBounds(0, 0, drawable3.getMinimumWidth(), drawable3.getMinimumHeight());
+        mMe.setCompoundDrawables(null,drawable3,null,null);
         switch (resId) {
             case R.id.jingxuan:
                 mJingXuan.setSelected(true);
+                Drawable drawable4= getResources().getDrawable(R.drawable.tab_btn_jingxuan_select);
+                /// 这一步必须要做,否则不会显示.
+                drawable4.setBounds(0, 0, drawable4.getMinimumWidth(), drawable4.getMinimumHeight());
+                mJingXuan.setCompoundDrawables(null,drawable4,null,null);
                 break;
             case R.id.shipu:
                 mShiPu.setSelected(true);
+                Drawable drawable5= getResources().getDrawable(R.drawable.tab_btn_shipu_select);
+                /// 这一步必须要做,否则不会显示.
+                drawable5.setBounds(0, 0, drawable5.getMinimumWidth(), drawable5.getMinimumHeight());
+                mShiPu.setCompoundDrawables(null,drawable5,null,null);
                 break;
             case R.id.faxian:
                 mFaXian.setSelected(true);
+                Drawable drawable6= getResources().getDrawable(R.drawable.tab_btn_faxian_select);
+                /// 这一步必须要做,否则不会显示.
+                drawable6.setBounds(0, 0, drawable6.getMinimumWidth(), drawable6.getMinimumHeight());
+                mFaXian.setCompoundDrawables(null,drawable6,null,null);
                 break;
             case R.id.me:
                 mMe.setSelected(true);
+                Drawable drawable7= getResources().getDrawable(R.drawable.tab_btn_me_select);
+                /// 这一步必须要做,否则不会显示.
+                drawable7.setBounds(0, 0, drawable7.getMinimumWidth(), drawable7.getMinimumHeight());
+                mMe.setCompoundDrawables(null,drawable7,null,null);
                 break;
         }
     }

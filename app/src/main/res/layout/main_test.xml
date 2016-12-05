@@ -5,13 +5,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
-    <include layout="@layout/toolbar"/>
-    <android.support.v7.widget.RecyclerView
-        android:background="@color/colorAccent"
-        android:id="@+id/main_recycler"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar_main">
 
-    </android.support.v7.widget.RecyclerView>
+    <include layout="@layout/toolbar"/>
+
+    <com.handmark.pulltorefresh.library.PullToRefreshScrollView
+        xmlns:ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/pull_refresh_scrollview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/toolbar_main"
+        ptr:ptrAnimationStyle="flip"
+        ptr:ptrHeaderTextColor="@color/pull_text"
+        ptr:ptrDrawable="@drawable/loading_animation"
+        ptr:ptrMode="pullFromStart">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/main_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorAccent"
+            >
+
+        </android.support.v7.widget.RecyclerView>
+    </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
 </RelativeLayout>

@@ -1,6 +1,7 @@
 package com.dayday.cook.api;
 
 import com.dayday.cook.beans.Bannar;
+import com.dayday.cook.beans.FaXian;
 import com.dayday.cook.beans.HomeNew;
 import com.dayday.cook.beans.HomeTopic;
 
@@ -45,4 +46,9 @@ public interface DayService {
     @GET("/daydaycook/server/recipe/search.do")
     Observable<HomeNew> getNew(@Query("deviceId") String deviceId, @Query("mainland") String mainland, @Query("languageId") String languageId,
                                  @Query("version")String version, @Query("regionCode") String regionCode,@Query("currentPage") String currentPage,@Query("pageSize") String pageSize);
+
+    //http://api.daydaycook.com.cn/daydaycook/recommend/getMoreThemeRecipe.do?deviceId=862744038984662&mainland=1&languageId=3&version=2.3.2&regionCode=156
+    @GET("/daydaycook/recommend/getMoreThemeRecipe.do")
+    Observable<FaXian> getFaXian(@Query("deviceId") String deviceId, @Query("mainland") String mainland, @Query("languageId") String languageId,
+                                 @Query("version")String version, @Query("regionCode") String regionCode);
 }

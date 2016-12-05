@@ -1,6 +1,7 @@
 package com.dayday.cook.ui.fragment;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 
 import com.bumptech.glide.Glide;
 import com.dayday.cook.R;
@@ -22,6 +24,8 @@ import com.dayday.cook.ui.activity.MainActivity;
 import com.dayday.cook.ui.adapter.HomeRecyclerAdapter;
 import com.dayday.cook.ui.model.HomeModel;
 import com.dayday.cook.ui.presenter.HomePresenter;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.orhanobut.logger.Logger;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
@@ -71,13 +75,22 @@ public class JingXuanFragment extends BaseFragment<HomePresenter> implements Hom
     private List<HomeTopic> mHomeTopic = new ArrayList<>();
     private List<HomeNew> mHomeNews = new ArrayList<>();
     LinearLayoutManager linearLayoutManager;
-
+    @BindView(R.id.pull_refresh_scrollview)
+    PullToRefreshScrollView mPullToRefreshScrollView;
     @Override
     protected void configView() {
+        mPullToRefreshScrollView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ScrollView>() {
+            @Override
+            public void onRefresh(PullToRefreshBase<ScrollView> refreshView) {
+                new GetDataTask().execute();
+            }
+        });
+
         mHomeRecyclerAdapter = new BaseRecyclerAdapter<HomeRecyclerAdapter>(new HomeRecyclerAdapter(getContext(), mHomeTopic, mHomeNews));
         linearLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(linearLayoutManager);
         header = LayoutInflater.from(getContext()).inflate(R.layout.home_banaer, null);
+        mRecyclerView.setNestedScrollingEnabled(false);
         mBanner = (Banner) header.findViewById(R.id.banner);
         mRecyclerView.setAdapter(mHomeRecyclerAdapter);
         mPresenter = new HomePresenter(this);
@@ -95,7 +108,28 @@ public class JingXuanFragment extends BaseFragment<HomePresenter> implements Hom
                     mToolbar.getPaddingRight(), mToolbar.getPaddingBottom());
         }
     }
+    private class GetDataTask extends AsyncTask<Void, Void, String[]> {
 
+        @Override
+        protected String[] doInBackground(Void... params) {
+            // Simulates a background job.
+            try {
+                Thread.sleep(4000);
+            } catch (InterruptedException e) {
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String[] result) {
+            // Do some stuff here
+
+            // Call onRefreshComplete when the list has been refreshed.
+            mPullToRefreshScrollView.onRefreshComplete();
+
+            super.onPostExecute(result);
+        }
+    }
     @Override
     protected int getLayoutId() {
         return R.layout.main_test;
@@ -125,7 +159,13 @@ public class JingXuanFragment extends BaseFragment<HomePresenter> implements Hom
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        Logger.e("onHiddenChanged");
+        mToolbar.setFocusableInTouchMode(true);
+        mToolbar.requestFocus();
+        if (hidden) {
+            mBanner.stopAutoPlay();
+        } else {
+            mBanner.startAutoPlay();
+        }
     }
 
     @Override
@@ -147,7 +187,7 @@ public class JingXuanFragment extends BaseFragment<HomePresenter> implements Hom
         for (Bannar.DataEntity entity : bannar.getData()) {
             mList.add(entity.getPath());
         }
-        header.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, getScreenH(getContext()) / 3));
+        //header.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, getScreenH(getContext()) / 3));
         mHomeRecyclerAdapter.addHeader(header);
         mRecyclerView.scrollToPosition(0);
         // 设置图片加载器
@@ -199,10 +239,5 @@ public class JingXuanFragment extends BaseFragment<HomePresenter> implements Hom
             //具体方法内容自己去选择，次方法是为了减少banner过多的依赖第三方包，所以将这个权限开放给使用者去选择
             Glide.with(mContextWeakReference.get()).load(path).into(imageView);
         }
-    }
-
-    public int getScreenW(Context aty) {
-        DisplayMetrics dm = aty.getResources().getDisplayMetrics();
-        return dm.widthPixels;
     }
 }

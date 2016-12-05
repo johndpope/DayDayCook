@@ -3,6 +3,7 @@ package com.dayday.cook.api;
 import com.dayday.cook.api.support.LoggingInterceptor;
 import com.dayday.cook.base.Constant;
 import com.dayday.cook.beans.Bannar;
+import com.dayday.cook.beans.FaXian;
 import com.dayday.cook.beans.HomeNew;
 import com.dayday.cook.beans.HomeTopic;
 import com.orhanobut.logger.Logger;
@@ -13,6 +14,7 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 import rx.Observable;
 
 /**
@@ -51,6 +53,7 @@ public class DayApi {
                 .addInterceptor(logging);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Constant.API_BASE_URL)
+//                .addConverterFactory(JacksonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create()) // 添加Rx适配器
                 .addConverterFactory(GsonConverterFactory.create()) // 添加Gson转换器
                 .client(builder.build())
@@ -80,5 +83,9 @@ public class DayApi {
     public Observable<HomeNew> getNew(String deviceId, String mainland, String languageId,
                                         String version, String regionCode,String curr,String pageSize) {
         return service.getNew(deviceId,mainland,languageId,version,regionCode,curr,pageSize);
+    }
+    public Observable<FaXian> getFaXian(String deviceId, String mainland, String languageId,
+                                        String version, String regionCode) {
+        return service.getFaXian(deviceId,mainland,languageId,version,regionCode);
     }
 }

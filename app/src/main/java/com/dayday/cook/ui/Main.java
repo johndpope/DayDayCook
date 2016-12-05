@@ -70,7 +70,7 @@ public class Main extends BaseActivity<HomePresenter> implements HomeModel.View,
     private List<HomeNew> mHomeNews = new ArrayList<>();
     @Override
     protected void configViews() {
-        mHomeRecyclerAdapter = new BaseRecyclerAdapter<HomeRecyclerAdapter>(new HomeRecyclerAdapter(this,mHomeTopic,mHomeNews));
+//        mHomeRecyclerAdapter = new BaseRecyclerAdapter<HomeRecyclerAdapter>(new HomeRecyclerAdapter(this,mHomeTopic,mHomeNews));
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mHomeRecyclerAdapter);
         header= LayoutInflater.from(this).inflate(R.layout.home_banaer,null);

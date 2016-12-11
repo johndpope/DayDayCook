@@ -1,6 +1,7 @@
 package com.dayday.cook.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,12 +9,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.dayday.cook.R;
 import com.dayday.cook.beans.HomeNew;
 import com.dayday.cook.beans.HomeTopic;
+import com.dayday.cook.ui.activity.ChuYiActivity;
+import com.dayday.cook.ui.activity.ShiPinXiangQingActivity;
+import com.dayday.cook.ui.activity.ShiPinZhuanQuActivity;
+import com.dayday.cook.ui.activity.XiangQingActivity;
 import com.orhanobut.logger.Logger;
 
 import java.util.List;
@@ -62,7 +68,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Logger.e("onCreateViewHolder");
         if (viewType == ITEM_TYPE.ITEM_TYPE_SKS.ordinal()) {
-            return new HomeSksyViewHolder(mLayoutInflater.inflate(R.layout.home_ksrk, parent, false));
+            return new HomeSksyViewHolder(mLayoutInflater.inflate(R.layout.home_ksrk, parent, false),mContext);
         } else if (viewType == ITEM_TYPE.ITEM_TYPE_NEW.ordinal()) {
             return new HomeNewViewHolder(mLayoutInflater.inflate(R.layout.home_new, parent, false));
         } else if (viewType == ITEM_TYPE.ITEM_TYPE_HOT.ordinal()) {
@@ -71,17 +77,32 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             return new HomeTopicViewHolder(mLayoutInflater.inflate(R.layout.home_topic_item, parent, false));
         }
     }
-
     private HomeNewAdapter mHomeNewAdapter;
     private HomeHotAdapter mHomeHotAdapter;
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         Logger.e("onBindViewHolder");
         if (holder instanceof HomeTopicViewHolder) {
             ((HomeTopicViewHolder) holder).topic_text.setText(mHomeTopic.get(0).getThemeList().get(position - 3).getTitle());
             ((HomeTopicViewHolder) holder).topic_text1.setText(mHomeTopic.get(0).getThemeList().get(position - 3).getDescription());
             Glide.with(mContext).load(mHomeTopic.get(0).getThemeList().get(position - 3).getImage_url()).into(((HomeTopicViewHolder) holder).mImageView);
+            ((HomeTopicViewHolder) holder).mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Logger.e(position-3+"**************************");
+                    Intent intent = new Intent();
+                    if(mHomeTopic.get(0).getThemeList().get(position - 3).getRecommend_type().equals("1")){
+                        intent.setClass(mContext, ShiPinXiangQingActivity.class);
+                        intent.putExtra(ShiPinXiangQingActivity.SHIPIN_ID,mHomeTopic.get(0).getThemeList().get(position - 3).getRecipe_id());
+                    }else {
+                        intent.setClass(mContext, XiangQingActivity.class);
+                        intent.putExtra(XiangQingActivity.NOTV_ID,mHomeTopic.get(0).getThemeList().get(position - 3).getRecipe_id());
+                    }
+                    mContext.startActivity(intent);
+                }
+            });
+
         } else if (holder instanceof HomeNewViewHolder) {
             mHomeNewAdapter = new HomeNewAdapter(mContext, homeNews);
             LinearLayoutManager manager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
@@ -126,14 +147,28 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public static class HomeSksyViewHolder extends RecyclerView.ViewHolder {
-        public HomeSksyViewHolder(View itemView) {
+        RelativeLayout shipinzhuanqu,chuyitiaozhan;
+        public HomeSksyViewHolder(View itemView, final Context context) {
             super(itemView);
+            shipinzhuanqu = (RelativeLayout) itemView.findViewById(R.id.shipinzhuanqu);
+            chuyitiaozhan = (RelativeLayout) itemView.findViewById(R.id.shipintiaozhan);
+            shipinzhuanqu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    context.startActivity(new Intent(context, ShiPinZhuanQuActivity.class));
+                }
+            });
+            chuyitiaozhan.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    context.startActivity(new Intent(context, ChuYiActivity.class));
+                }
+            });
         }
     }
 
     public static class HomeNewViewHolder extends RecyclerView.ViewHolder {
         RecyclerView mRecyclerView;
-
         public HomeNewViewHolder(View itemView) {
             super(itemView);
             mRecyclerView = (RecyclerView) itemView.findViewById(R.id.home_new_recy);
@@ -153,9 +188,10 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         TextView topic_text;
         TextView topic_text1;
         ImageView mImageView;
-
+        View mView;
         public HomeTopicViewHolder(View itemView) {
             super(itemView);
+            mView = itemView;
             mImageView = (ImageView) itemView.findViewById(R.id.image_topic);
             topic_text = (TextView) itemView.findViewById(R.id.text_topic);
             topic_text1 = (TextView) itemView.findViewById(R.id.text_topic1);

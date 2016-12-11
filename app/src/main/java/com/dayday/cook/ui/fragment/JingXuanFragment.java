@@ -1,8 +1,9 @@
 package com.dayday.cook.ui.fragment;
 
 import android.content.Context;
-import android.os.AsyncTask;
+import android.content.Intent;
 import android.os.Build;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -21,6 +22,7 @@ import com.dayday.cook.beans.Bannar;
 import com.dayday.cook.beans.HomeNew;
 import com.dayday.cook.beans.HomeTopic;
 import com.dayday.cook.ui.activity.MainActivity;
+import com.dayday.cook.ui.activity.SearchActivity;
 import com.dayday.cook.ui.adapter.HomeRecyclerAdapter;
 import com.dayday.cook.ui.model.HomeModel;
 import com.dayday.cook.ui.presenter.HomePresenter;
@@ -37,6 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * Created by fan on 2016/12/2.
@@ -70,6 +73,11 @@ public class JingXuanFragment extends BaseFragment<HomePresenter> implements Hom
     Toolbar mToolbar;
     @BindView(R.id.main_recycler)
     RecyclerView mRecyclerView;
+    @OnClick(R.id.image_search) public void goSearch(){
+        startActivity(new Intent(getActivity(), SearchActivity.class));
+    }
+
+
     View header;
     private BaseRecyclerAdapter<HomeRecyclerAdapter> mHomeRecyclerAdapter;
     private List<HomeTopic> mHomeTopic = new ArrayList<>();
@@ -82,10 +90,11 @@ public class JingXuanFragment extends BaseFragment<HomePresenter> implements Hom
         mPullToRefreshScrollView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ScrollView>() {
             @Override
             public void onRefresh(PullToRefreshBase<ScrollView> refreshView) {
-                new GetDataTask().execute();
+                mPresenter.getBannar("862744038984662", "1", "3", "2.3.2", "156");
+                mPresenter.getTopic("862744038984662", "1", "3", "2.3.2", "156");
+                mPresenter.getNew("862744038984662", "1", "3", "2.3.2", "156", "0", "10");
             }
         });
-
         mHomeRecyclerAdapter = new BaseRecyclerAdapter<HomeRecyclerAdapter>(new HomeRecyclerAdapter(getContext(), mHomeTopic, mHomeNews));
         linearLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(linearLayoutManager);
@@ -106,28 +115,6 @@ public class JingXuanFragment extends BaseFragment<HomePresenter> implements Hom
             mRelativeLayout.addView(view, mRelativeLayout.getChildCount());
             mToolbar.setPadding(mToolbar.getPaddingLeft(), mToolbar.getPaddingTop() + MainActivity.statuBar,
                     mToolbar.getPaddingRight(), mToolbar.getPaddingBottom());
-        }
-    }
-    private class GetDataTask extends AsyncTask<Void, Void, String[]> {
-
-        @Override
-        protected String[] doInBackground(Void... params) {
-            // Simulates a background job.
-            try {
-                Thread.sleep(4000);
-            } catch (InterruptedException e) {
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String[] result) {
-            // Do some stuff here
-
-            // Call onRefreshComplete when the list has been refreshed.
-            mPullToRefreshScrollView.onRefreshComplete();
-
-            super.onPostExecute(result);
         }
     }
     @Override
@@ -182,13 +169,13 @@ public class JingXuanFragment extends BaseFragment<HomePresenter> implements Hom
 
     @Override
     public void showBannar(Bannar bannar) {
-        Logger.e(bannar.toString());
         mList.clear();
         for (Bannar.DataEntity entity : bannar.getData()) {
             mList.add(entity.getPath());
         }
-        //header.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, getScreenH(getContext()) / 3));
-        mHomeRecyclerAdapter.addHeader(header);
+        if(mHomeRecyclerAdapter.getHeaderCount()<1){
+            mHomeRecyclerAdapter.addHeader(header);
+        }
         mRecyclerView.scrollToPosition(0);
         // 设置图片加载器
         mBanner.setImageLoader(new GlideImageLoader(getContext()));
@@ -201,7 +188,6 @@ public class JingXuanFragment extends BaseFragment<HomePresenter> implements Hom
         mBanner.setImages(mList);
         mBanner.start();
     }
-
     @Override
     public void showTopic(HomeTopic homeTopic) {
         mHomeTopic.clear();
@@ -215,11 +201,14 @@ public class JingXuanFragment extends BaseFragment<HomePresenter> implements Hom
         mHomeNews.clear();
         mHomeNews.add(homeNew);
         mHomeRecyclerAdapter.notifyDataSetChanged();
+        mPullToRefreshScrollView.onRefreshComplete();
     }
 
     @Override
     public void showError() {
         Logger.e("Error");
+        mPullToRefreshScrollView.onRefreshComplete();
+        Snackbar.make(mPullToRefreshScrollView,"刷新失败",Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

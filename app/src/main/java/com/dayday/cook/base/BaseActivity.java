@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -162,5 +163,13 @@ public abstract class BaseActivity<T1 extends BaseContract.BasePresenter> extend
             }
         }
         return result;
+    }
+    protected int getScreenW(Context aty) {
+        DisplayMetrics dm = aty.getResources().getDisplayMetrics();
+        return dm.widthPixels;
+    }
+    protected int getScreenH(Context aty) {
+        DisplayMetrics dm = aty.getResources().getDisplayMetrics();
+        return dm.heightPixels;
     }
 }

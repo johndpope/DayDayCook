@@ -19,4 +19,6 @@
     <string name="myorder">我的订单</string>
     <string name="address_manager">地址管理</string>
     <string name="settting">设置</string>
+    <string name="canlce">取消</string>
+    <string name="search_hint">输入菜谱 / 食谱 / 菜系</string>
 </resources>

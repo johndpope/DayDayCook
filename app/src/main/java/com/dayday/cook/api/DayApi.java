@@ -3,18 +3,24 @@ package com.dayday.cook.api;
 import com.dayday.cook.api.support.LoggingInterceptor;
 import com.dayday.cook.base.Constant;
 import com.dayday.cook.beans.Bannar;
+import com.dayday.cook.beans.ChuYi;
+import com.dayday.cook.beans.Date;
 import com.dayday.cook.beans.FaXian;
 import com.dayday.cook.beans.HomeNew;
 import com.dayday.cook.beans.HomeTopic;
+import com.dayday.cook.beans.HotSearch;
+import com.dayday.cook.beans.ShiPinZhuanQu;
+import com.dayday.cook.beans.ShipinXiangQing;
+import com.dayday.cook.beans.XiangQing;
 import com.orhanobut.logger.Logger;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.converter.scalars.ScalarsConverterFactory;
 import rx.Observable;
 
 /**
@@ -87,5 +93,31 @@ public class DayApi {
     public Observable<FaXian> getFaXian(String deviceId, String mainland, String languageId,
                                         String version, String regionCode) {
         return service.getFaXian(deviceId,mainland,languageId,version,regionCode);
+    }
+    public Observable<List<HotSearch>> getHotSearch(String deviceId, String mainland, String languageId,
+                                                   String version, String regionCode) {
+        return service.getHotSearch(deviceId,mainland,languageId,version,regionCode);
+    }
+
+    public Observable<Date> getDate(String deviceId, String mainland, String languageId,
+                                         String version, String regionCode) {
+        return service.getDate(deviceId,mainland,languageId,version,regionCode);
+    }
+    public Observable<ChuYi> getChuYi(String deviceId, String curr, String mainland, String languageId,
+                                      String version, String regionCode, String pagesize) {
+        return service.getChuYi(deviceId,curr,mainland,languageId,version,regionCode,pagesize);
+    }
+    public Observable<ShiPinZhuanQu> getShipin(String deviceId, String curr, String mainland, String languageId,
+                                              String version, String regionCode, String pagesize) {
+        return service.getShipin(deviceId,curr,mainland,languageId,version,regionCode,pagesize);
+    }
+
+    public Observable<ShipinXiangQing> getShipinXiangQing(String deviceId,String id, String mainland, String languageId,
+                                                          String ver,String version, String regionCode) {
+        return service.getShipinXiangQing(deviceId,mainland,id,languageId,ver,version,regionCode);
+    }
+    public Observable<XiangQing> getXiangQing(String deviceId, String id, String mainland, String languageId,
+                                                    String ver, String version, String regionCode) {
+        return service.getXiangQing(deviceId,mainland,id,languageId,ver,version,regionCode);
     }
 }

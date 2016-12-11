@@ -1,6 +1,7 @@
 package com.dayday.cook.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,8 @@ import com.bumptech.glide.Glide;
 import com.dayday.cook.R;
 import com.dayday.cook.beans.FaXian;
 import com.dayday.cook.ui.activity.MainActivity;
+import com.dayday.cook.ui.activity.XiangQingActivity;
+import com.orhanobut.logger.Logger;
 
 import java.util.List;
 
@@ -54,9 +57,8 @@ public class FaXianAdapter extends RecyclerView.Adapter<FaXianAdapter.ViewHolder
     public FaXianAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new FaXianAdapter.ViewHolder(mLayoutInflater.inflate(R.layout.faxian_item, parent, false));
     }
-
     @Override
-    public void onBindViewHolder(FaXianAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(FaXianAdapter.ViewHolder holder, final int position) {
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                 MainActivity.Height / 2);
         layoutParams.setMargins(2, 2, 2, 2);
@@ -94,8 +96,39 @@ public class FaXianAdapter extends RecyclerView.Adapter<FaXianAdapter.ViewHolder
                 holder.mTextView.setText("#" + mFaXien.get(0).eight.get(0).getLocationName());
                 Glide.with(mContext).load(mFaXien.get(0).eight.get(0).getImage_url()).into(holder.image);
                 break;
-
         }
+        holder.mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setClass(mContext, XiangQingActivity.class);
+                if(position == 0){
+                    intent.putExtra(XiangQingActivity.NOTV_ID, mFaXien.get(0).one.get(0).getRecipe_id());
+                }else if(position == 1){
+                    intent.putExtra(XiangQingActivity.NOTV_ID, mFaXien.get(0).two.get(0).getRecipe_id());
+                }
+                else if(position == 2){
+                    intent.putExtra(XiangQingActivity.NOTV_ID, mFaXien.get(0).three.get(0).getRecipe_id());
+                }
+                else if(position == 3){
+                    intent.putExtra(XiangQingActivity.NOTV_ID, mFaXien.get(0).four.get(0).getRecipe_id());
+                }
+                else if(position == 4){
+                    intent.putExtra(XiangQingActivity.NOTV_ID, mFaXien.get(0).five.get(0).getRecipe_id());
+                }
+                else if(position == 5){
+                    intent.putExtra(XiangQingActivity.NOTV_ID, mFaXien.get(0).six.get(0).getRecipe_id());
+                    Logger.e(mFaXien.get(0).one.get(0).getLocationName());
+                }
+                else if(position == 6){
+                    intent.putExtra(XiangQingActivity.NOTV_ID, mFaXien.get(0).seven.get(0).getRecipe_id());
+                }
+                else if(position == 7){
+                    intent.putExtra(XiangQingActivity.NOTV_ID, mFaXien.get(0).eight.get(0).getRecipe_id());
+                }
+                mContext.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -110,9 +143,11 @@ public class FaXianAdapter extends RecyclerView.Adapter<FaXianAdapter.ViewHolder
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView image;
         TextView mTextView;
+        View mView;
 
         public ViewHolder(View itemView) {
             super(itemView);
+            mView = itemView;
             image = (ImageView) itemView.findViewById(R.id.faxian_image);
             mTextView = (TextView) itemView.findViewById(R.id.faxian_text);
         }

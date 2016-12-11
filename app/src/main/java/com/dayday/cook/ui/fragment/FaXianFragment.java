@@ -1,8 +1,8 @@
 package com.dayday.cook.ui.fragment;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Build;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
@@ -78,11 +78,10 @@ public class FaXianFragment extends BaseFragment<FaXianPresenter> implements FaX
     PullToRefreshScrollView mPullToRefreshScrollView;
     @Override
     protected void configView() {
-
         mPullToRefreshScrollView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ScrollView>() {
             @Override
             public void onRefresh(PullToRefreshBase<ScrollView> refreshView) {
-                    new GetDataTask().execute();
+                mPresenter.getFaXian("862744038984662", "1", "3", "2.3.2", "156");
             }
         });
         mBaseRecyclerAdapter = new BaseRecyclerAdapter<FaXianAdapter>(new FaXianAdapter(getContext(), mFaXien));
@@ -104,28 +103,6 @@ public class FaXianFragment extends BaseFragment<FaXianPresenter> implements FaX
         }
         mPresenter = new FaXianPresenter(this);
         mPresenter.getFaXian("862744038984662", "1", "3", "2.3.2", "156");
-    }
-    private class GetDataTask extends AsyncTask<Void, Void, String[]> {
-
-        @Override
-        protected String[] doInBackground(Void... params) {
-            // Simulates a background job.
-            try {
-                Thread.sleep(4000);
-            } catch (InterruptedException e) {
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String[] result) {
-            // Do some stuff here
-
-            // Call onRefreshComplete when the list has been refreshed.
-            mPullToRefreshScrollView.onRefreshComplete();
-
-            super.onPostExecute(result);
-        }
     }
     @Override
     protected int getLayoutId() {
@@ -167,6 +144,11 @@ public class FaXianFragment extends BaseFragment<FaXianPresenter> implements FaX
     @Override
     public void showFaXian(FaXian faXian) {
         Logger.e(faXian.toString());
+        if(mLinearLayout.getChildAt(0) instanceof RecyclerView){
+
+        }else {
+            mLinearLayout.removeViewAt(0);
+        }
         mList.clear();
         for (FaXian.One one : faXian.nine) {
             mList.add(one.getImage_url());
@@ -187,12 +169,13 @@ public class FaXianFragment extends BaseFragment<FaXianPresenter> implements FaX
         mFaXien.clear();
         mFaXien.add(faXian);
         mBaseRecyclerAdapter.notifyDataSetChanged();
-
+        mPullToRefreshScrollView.onRefreshComplete();
     }
 
     @Override
     public void showError() {
-
+        mPullToRefreshScrollView.onRefreshComplete();
+        Snackbar.make(mPullToRefreshScrollView,"刷新失败",Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

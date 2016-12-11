@@ -1,8 +1,8 @@
 package com.dayday.cook.ui.fragment;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Build;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -58,7 +58,6 @@ import butterknife.OnClick;
  * ━━━━━━感觉萌萌哒━━━━━━
  */
 public class ShiPuFragment extends BaseFragment<HomePresenter> implements HomeModel.View {
-
     @BindView(R.id.toolbar_main)
     Toolbar mToolbarMain;
     @BindView(R.id.shipu_recyclerView)
@@ -67,7 +66,7 @@ public class ShiPuFragment extends BaseFragment<HomePresenter> implements HomeMo
     RelativeLayout mRelativeLayout;
     ShiPuAdapter mShiPuAdapter;
     ShiPuAdapterGrid mShiPuAdapterGrid;
-    private List<HomeNew> mHomeNews = new ArrayList<>();
+    private List<HomeNew.DataEntity> mHomeNews = new ArrayList<>();
     @BindView(R.id.shipu_type)
     ImageView mImageView;
     private boolean type = false;
@@ -75,7 +74,7 @@ public class ShiPuFragment extends BaseFragment<HomePresenter> implements HomeMo
     PullToRefreshScrollView mPullToRefreshScrollView;
     @BindView(R.id.fab)
     ImageView fabs;
-
+    private int first = 0;
     @OnClick(R.id.rela)
     public void changType() {
         type = !type;
@@ -100,29 +99,6 @@ public class ShiPuFragment extends BaseFragment<HomePresenter> implements HomeMo
     @OnClick(R.id.fab)
     public void go() {
         mPullToRefreshScrollView.getRefreshableView().smoothScrollTo(0, 0);
-    }
-
-    private class GetDataTask extends AsyncTask<Void, Void, String[]> {
-
-        @Override
-        protected String[] doInBackground(Void... params) {
-            // Simulates a background job.
-            try {
-                Thread.sleep(4000);
-            } catch (InterruptedException e) {
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String[] result) {
-            // Do some stuff here
-
-            // Call onRefreshComplete when the list has been refreshed.
-            mPullToRefreshScrollView.onRefreshComplete();
-
-            super.onPostExecute(result);
-        }
     }
 
     @Override
@@ -154,12 +130,14 @@ public class ShiPuFragment extends BaseFragment<HomePresenter> implements HomeMo
         mPullToRefreshScrollView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ScrollView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ScrollView> refreshView) {
-                new GetDataTask().execute();
+                first = 0;
+                mHomeNews.clear();
+                mPresenter.getNew("862744038984662", "1", "3", "2.3.2", "156","0", "10");
             }
-
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ScrollView> refreshView) {
-                new GetDataTask().execute();
+                first += 1;
+                mPresenter.getNew("862744038984662", "1", "3", "2.3.2", "156",first+"", "10");
             }
         });
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -172,9 +150,8 @@ public class ShiPuFragment extends BaseFragment<HomePresenter> implements HomeMo
                     mToolbarMain.getPaddingRight(), mToolbarMain.getPaddingBottom());
         }
         mPresenter = new HomePresenter(this);
-        mPresenter.getNew("862744038984662", "1", "3", "2.3.2", "156", "0", "10");
+        mPresenter.getNew("862744038984662", "1", "3", "2.3.2", "156",first+"", "10");
     }
-
     @Override
     protected int getLayoutId() {
         return R.layout.shipu_fragment;
@@ -197,16 +174,16 @@ public class ShiPuFragment extends BaseFragment<HomePresenter> implements HomeMo
 
     @Override
     public void showNew(HomeNew homeNew) {
-        mHomeNews.clear();
-        mHomeNews.add(homeNew);
+        mHomeNews.addAll(homeNew.getData());
         mShiPuAdapter.notifyDataSetChanged();
-
+        mPullToRefreshScrollView.onRefreshComplete();
     }
 
 
     @Override
     public void showError() {
-
+        mPullToRefreshScrollView.onRefreshComplete();
+        Snackbar.make(mPullToRefreshScrollView,"刷新失败",Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

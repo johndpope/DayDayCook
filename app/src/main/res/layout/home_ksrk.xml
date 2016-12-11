@@ -6,6 +6,7 @@
               android:background="@color/colorAccent"
               android:orientation="horizontal">
     <RelativeLayout
+        android:id="@+id/shipin_zhuanqu"
         android:layout_weight="1"
         android:layout_width="0dp"
         android:layout_height="wrap_content">
@@ -22,6 +23,7 @@
             />
     </RelativeLayout>
     <RelativeLayout
+        android:id="@+id/shipinzhuanqu"
         android:layout_weight="1"
         android:layout_width="0dp"
         android:layout_height="wrap_content">
@@ -37,6 +39,7 @@
             />
     </RelativeLayout>
     <RelativeLayout
+        android:id="@+id/shipintiaozhan"
         android:layout_weight="1"
         android:layout_width="0dp"
         android:layout_height="wrap_content">

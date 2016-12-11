@@ -1,6 +1,7 @@
 package com.dayday.cook.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +14,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.dayday.cook.R;
 import com.dayday.cook.beans.HomeNew;
+import com.dayday.cook.ui.activity.ShiPinXiangQingActivity;
+import com.orhanobut.logger.Logger;
 
 import java.util.List;
 
@@ -42,9 +45,9 @@ import java.util.List;
 public class ShiPuAdapterGrid  extends RecyclerView.Adapter<ShiPuAdapterGrid.ViewHolder>  {
     private LayoutInflater mLayoutInflater;
     private Context mContext;
-    private List<HomeNew> mHomeNews;
+    private List<HomeNew.DataEntity> mHomeNews;
 
-    public ShiPuAdapterGrid(Context context, List<HomeNew> mHomeNews) {
+    public ShiPuAdapterGrid(Context context, List<HomeNew.DataEntity> mHomeNews) {
         mLayoutInflater = LayoutInflater.from(context);
         mContext = context;
         this.mHomeNews = mHomeNews;
@@ -55,22 +58,32 @@ public class ShiPuAdapterGrid  extends RecyclerView.Adapter<ShiPuAdapterGrid.Vie
     }
 
     @Override
-    public void onBindViewHolder(ShiPuAdapterGrid.ViewHolder holder, int position) {
+    public void onBindViewHolder(ShiPuAdapterGrid.ViewHolder holder, final int position) {
         GridLayoutManager.LayoutParams layoutParams = new GridLayoutManager.LayoutParams(GridLayoutManager.LayoutParams.WRAP_CONTENT,
                 holder.card.getLayoutParams().height);
         layoutParams.setMargins(10,10,10,10);
         holder.card.setLayoutParams(layoutParams);
-        holder.topic_text.setText(mHomeNews.get(0).getData().get(position).getTitle());
-        holder.new_text.setText(mHomeNews.get(0).getData().get(position).getDescription());
-        holder.count.setText(mHomeNews.get(0).getData().get(position).getClickCount()+"");
-        Glide.with(mContext).load(mHomeNews.get(0).getData().get(position).getImageUrl()).into(holder.mImageView);
+        holder.topic_text.setText(mHomeNews.get(position).getTitle());
+        holder.new_text.setText(mHomeNews.get(position).getDescription());
+        holder.count.setText(mHomeNews.get(position).getClickCount()+"");
+        Glide.with(mContext).load(mHomeNews.get(position).getImageUrl()).into(holder.mImageView);
+        holder.mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setClass(mContext, ShiPinXiangQingActivity.class);
+                intent.putExtra(ShiPinXiangQingActivity.SHIPIN_ID,mHomeNews.get(position).getId());
+                Logger.e(mHomeNews.get(position).getId()+"");
+                mContext.startActivity(intent);
+            }
+        });
     }
     @Override
     public int getItemCount() {
         if (mHomeNews.size() < 1) {
             return 0;
         } else {
-            return mHomeNews.get(0).getData().size();
+            return mHomeNews.size();
         }
     }
 
@@ -80,8 +93,10 @@ public class ShiPuAdapterGrid  extends RecyclerView.Adapter<ShiPuAdapterGrid.Vie
         ImageView mImageView;
         CardView card;
         TextView count;
+        View mView;
         public ViewHolder(View itemView) {
             super(itemView);
+            mView = itemView;
             mImageView = (ImageView) itemView.findViewById(R.id.home_new_image);
             topic_text = (TextView) itemView.findViewById(R.id.text_new);
             new_text = (TextView) itemView.findViewById(R.id.text_new_t);
